@@ -1,4 +1,4 @@
-import 'package:firebasechat/pages/homepage.dart';
+import 'package:firebasechat/pages/auth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,8 +11,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage() ,
+    return MaterialApp(
+      title: 'FlutterChat',
+      theme: ThemeData().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 63, 17, 177),
+        ), 
+      ),
+      home: const AuthScreen(),
     );
   }
 }
