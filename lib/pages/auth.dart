@@ -72,6 +72,9 @@ class _AuthScreen extends State<AuthScreen> {
                             ),
                           ),
                           TextFormField(
+                            onSaved: (val) {
+                              _enteredPassword = val!;
+                            },
                             validator: (value) {
                               if (value == null || value.trim().length < 6) {
                                 return 'Enter a valid Password.';
