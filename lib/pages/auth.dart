@@ -10,7 +10,19 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreen extends State<AuthScreen> {
+  final _formKey = GlobalKey<FormState>();
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+
   bool _isLogin = true;
+
+  void _onsubmit() {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      _formKey.currentState!.save();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +48,22 @@ class _AuthScreen extends State<AuthScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(
+                      key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
+                            onSaved: (value) {
+                              _enteredEmail = value!;
+                            },
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  !value.contains('@')) {
+                                return 'Enter a valid email address. ';
+                              }
+                              return null;
+                            },
                             autocorrect: false,
                             keyboardType: TextInputType.emailAddress,
                             textCapitalization: TextCapitalization.none,
@@ -48,6 +72,12 @@ class _AuthScreen extends State<AuthScreen> {
                             ),
                           ),
                           TextFormField(
+                            validator: (value) {
+                              if (value == null || value.trim().length < 6) {
+                                return 'Enter a valid Password.';
+                              }
+                              return null;
+                            },
                             obscureText: true,
                             decoration: const InputDecoration(
                               label: Text('Password'),
@@ -57,7 +87,7 @@ class _AuthScreen extends State<AuthScreen> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _onsubmit,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context)
                                   .colorScheme
