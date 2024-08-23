@@ -11,9 +11,13 @@ class Chatscreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Chat Screen'),
         actions: [
-          IconButton(onPressed: (){
-            FirebaseAuth.instance.signOut();
-          }, icon: const Icon(Icons.exit_to_app))
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            icon: const Icon(Icons.exit_to_app),
+            color: Theme.of(context).colorScheme.primary,
+          )
         ],
       ),
       body: const Center(
