@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class Chatscreen extends StatelessWidget {
@@ -8,6 +10,11 @@ class Chatscreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat Screen'),
+        actions: [
+          IconButton(onPressed: (){
+            FirebaseAuth.instance.signOut();
+          }, icon: const Icon(Icons.exit_to_app))
+        ],
       ),
       body: const Center(
         child: Text('logged In ...'),
