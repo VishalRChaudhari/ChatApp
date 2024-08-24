@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebasechat/Widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -30,7 +32,7 @@ class _AuthScreen extends State<AuthScreen> {
       if (_isLogin) {
         final userCredential = await _firebase.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
-             print(userCredential);
+        print(userCredential);
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
@@ -50,7 +52,7 @@ class _AuthScreen extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent.shade400,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -76,6 +78,8 @@ class _AuthScreen extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if(!_isLogin)
+                            const UserImagePicker(),
                           TextFormField(
                             onSaved: (value) {
                               _enteredEmail = value!;
