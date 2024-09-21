@@ -39,6 +39,7 @@ class _AuthScreen extends State<AuthScreen> {
         setState(() {
           _isAuthenticating = true;
         });
+        // ignore: unused_local_variable
         final userCredentials = await _firebase.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
       } else {
@@ -141,6 +142,7 @@ class _AuthScreen extends State<AuthScreen> {
                                     value.length < 3) {
                                   return 'Username should be more than 3 characters. ';
                                 }
+                                return null;
                               },
                               onSaved: (value) {
                                 _enteredUsername = value!;
