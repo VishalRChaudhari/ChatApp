@@ -8,8 +8,8 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('Users')
-          .orderBy('CreatedAt', descending: false)
+          .collection('chat')
+          .orderBy('CreatedAt', descending: true)
           .snapshots(),
       builder: (ctx, chatSnapshots) {
         if (chatSnapshots.connectionState == ConnectionState.waiting) {
@@ -17,23 +17,25 @@ class ChatMessage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
+
         if (!chatSnapshots.hasData || chatSnapshots.data!.docs.isEmpty) {
           return const Center(
-            child: Text('No Messages Found...'),
+            child: Text('No messages found.'),
           );
         }
+
         if (chatSnapshots.hasError) {
           return const Center(
-            child: Text('Something went wrong'),
+            child: Text('Something went wrong...'),
           );
         }
 
         final loadedMessages = chatSnapshots.data!.docs;
-
         return ListView.builder(
           itemCount: loadedMessages.length,
-          itemBuilder: (ctx, index) =>
-              Text(loadedMessages[index].data()['Message']),
+          itemBuilder: (ctx, index) => Text(
+            loadedMessages[index].data()['Message'],
+          ),
         );
       },
     );
