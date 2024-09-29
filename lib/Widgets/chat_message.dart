@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebasechat/Widgets/chat_bubble.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessage extends StatelessWidget {
@@ -6,6 +8,7 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authenticatedUser = FirebaseAuth.instance.currentUser!;
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('chat')
@@ -32,12 +35,35 @@ class ChatMessage extends StatelessWidget {
 
         final loadedMessages = chatSnapshots.data!.docs;
         return ListView.builder(
-          padding: const EdgeInsets.only(bottom: 30,left: 12,right: 12),
+          padding: const EdgeInsets.only(
+            bottom: 30,
+            left: 12,
+            right: 12,
+          ),
           reverse: true,
           itemCount: loadedMessages.length,
-          itemBuilder: (ctx, index) => Text(
-            loadedMessages[index].data()['Message'],
-          ),
+          itemBuilder: (ctx, index) {
+            final chatMessage = loadedMessages[index].data();
+            final nextMessage = index + 1 < loadedMessages.length
+                ? loadedMessages[index + 1].data()
+                : null;
+            final currenMessagetUserID = chatMessage['userID'];
+            final nextMessageUserID =
+                nextMessage != null ? nextMessage['userID'] : null;
+
+            final nextUserisSame = nextMessageUserID == currenMessagetUserID;
+            if (nextUserisSame) {
+              return MessageBubble.next(
+                  message: chatMessage['Message'],
+                  isMe: authenticatedUser.uid == currenMessagetUserID);
+            } else {
+              return MessageBubble.first(
+                  userImage: chatMessage['UserImage'],
+                  username: chatMessage['Username'],
+                  message: chatMessage['Message'],
+                  isMe: authenticatedUser.uid == currenMessagetUserID);
+            }
+          },
         );
       },
     );
