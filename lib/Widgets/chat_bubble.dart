@@ -10,7 +10,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
   }) : isFirstInSequence = true;
-
+ 
   // Create a amessage bubble that continues the sequence.
   const MessageBubble.next({
     super.key,
