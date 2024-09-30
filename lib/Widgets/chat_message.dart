@@ -1,10 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebasechat/Widgets/chat_bubble.dart';
 import 'package:flutter/material.dart';
 
-class ChatMessage extends StatelessWidget {
+class ChatMessage extends StatefulWidget {
   const ChatMessage({super.key});
+
+  @override
+  State<ChatMessage> createState() => _ChatMessageState();
+}
+
+class _ChatMessageState extends State<ChatMessage> {
+  void setUpNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+    await fcm.requestPermission();
+    final token = await fcm.getToken();
+    fcm.subscribeToTopic('chat');
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    setUpNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +66,21 @@ class ChatMessage extends StatelessWidget {
             final nextMessage = index + 1 < loadedMessages.length
                 ? loadedMessages[index + 1].data()
                 : null;
-            final currenMessagetUserID = chatMessage['userID'];
+            final currentMessagetUserID = chatMessage['userID'];
             final nextMessageUserID =
                 nextMessage != null ? nextMessage['userID'] : null;
 
-            final nextUserisSame = nextMessageUserID == currenMessagetUserID;
+            final nextUserisSame = nextMessageUserID == currentMessagetUserID;
             if (nextUserisSame) {
               return MessageBubble.next(
                   message: chatMessage['Message'],
-                  isMe: authenticatedUser.uid == currenMessagetUserID);
+                  isMe: authenticatedUser.uid == currentMessagetUserID);
             } else {
               return MessageBubble.first(
                   userImage: chatMessage['UserImage'],
                   username: chatMessage['Username'],
                   message: chatMessage['Message'],
-                  isMe: authenticatedUser.uid == currenMessagetUserID);
+                  isMe: authenticatedUser.uid == currentMessagetUserID);
             }
           },
         );
